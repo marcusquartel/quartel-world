@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quartel World
 
-## Getting Started
-
-First, run the development server:
+O mundo 3D gamificado do **Quartel Criativo** (Quartel Design), feito a partir do blueprint do GLANCE WORLD.
+O visual é de blocos e o tema é "quartel": preto, dourado, tijolo, verde-oliva, a estrela do Q e patentes militares.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm test           # testes do catálogo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`/?bots=200` adiciona bots locais (máx. 1000) e mostra o medidor de FPS. Esses bots não vão para nenhum canal nem banco.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## O que já está pronto (protótipo local, dados fictícios)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Blueprint | Quartel World |
+|---|---|
+| Avatar de blocos | 10 slots, 67 itens, 4 raridades (`src/lib/game/catalog.ts`) |
+| Conquistas por métricas reais | 16 conquistas: jobs entregues, aprovação de primeira, prazo, nota do cliente, posts/cases, indicações, sequência de meses, ranking, interações, estrelas |
+| Nível / XP | Patentes: Recruta → Soldado → Cabo → Sargento → Tenente → Capitão → Major → Coronel → General |
+| Colecionável | Estrelas do Q: cobre = 1, prata = 2, **dourada = 5** (reaparecem em 25s / 40s / 75s), com som, confete e "+N" |
+| Marcos 3D | QG de tijolo com "QUARTEL" e "03", lápis gigante, monitor "Do epic shit.", mouse gigante, tanque com canhão de lápis, capacete Q, guarita, arcos |
+| Outdoors | Fotos reais do escritório (`public/billboards/`), clicáveis, com UTM `utm_source=quartel-world` |
+| Pódio | Top 3 do mês com pose de vitória |
+| Social | Acenar, Continência, Dançar, Aplaudir, Coração (teclas 1–5), frases prontas, card ao clicar numa pessoa, feed |
+| Desempenho | LOD por orçamento (30 avatares completos), `memo`, `?bots=N` |
+| Conquistas do mês | Os itens saem do avatar se a pessoa deixar de cumprir (o avatar é sempre sanitizado) |
 
-## Learn More
+Por enquanto, avatar, nome, conquistas vistas e métricas ficam no `localStorage`. A aba **Conquistas** tem um painel "Métricas de demonstração" para testar as regras.
 
-To learn more about Next.js, take a look at the following resources:
+## Próximas fases (blueprint §13)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. **Banco (Supabase):** `quartel_game_profiles`, `quartel_interactions`, `quartel_game_prizes`; RPCs `security definer` (`portal_game`, `portal_save_avatar`, `portal_interact`, `portal_collect_stars`); `game_catalog()` espelhando `catalog.ts` + teste de paridade.
+5. **Métricas reais** (`quartel_game_stats`): de onde vêm os jobs, prazos, aprovações e notas (ClickUp/Asana/Notion/planilha?).
+6. **Multiplayer:** canal privado `quartel-world:<org_id>` (presence + broadcast `move`/`react`/`interact`).
+9. **Antifraude** antes de qualquer prêmio com valor (folga, brinde, bônus): validar a coleta no servidor, teto diário.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Decisões assumidas (dá para mudar)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Quem joga: equipe interna e freelas da Quartel.
+- Ranking individual e mensal, mostrando só posições (sem valores).
+- Os outdoors apontam todos para `quarteldesign.com`. Troque as URLs em `src/features/game/billboards.tsx`.
